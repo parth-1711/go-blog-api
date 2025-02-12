@@ -2,6 +2,8 @@ package models
 
 import (
 	"context"
+	"os"
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -14,7 +16,12 @@ var UserCollection *mongo.Collection
 var CommentCollection *mongo.Collection
 
 func ConnectDatabase() {
-	clientOptions := options.Client().ApplyURI("mongodb+srv://parthirache8:z4vzCIhmvjhlg4S2@cluster0.c2hgi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	MONGO_URI:=os.Getenv("MONGO_URI")
+	clientOptions := options.Client().ApplyURI(MONGO_URI)
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
 		log.Fatal(err)
